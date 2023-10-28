@@ -1,11 +1,11 @@
 puts "Введите известные стороны треугольника:"
-print "a =  "
+print "a = "
 a = gets.chomp.to_i
 
-print "b =  "
+print "b = "
 b = gets.chomp.to_i
 
-print "c =  "
+print "c = "
 c = gets.chomp.to_i
 
 sides = [a,b,c].sort
