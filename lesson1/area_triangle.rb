@@ -5,5 +5,5 @@ a = gets.chomp
 puts "Хорошо. Чему равна высота треугольника?"
 h = gets.chomp
 
-area = a.to_i*h.to_i*1/2
-puts "Площадь треугольника равна #{area}"
+area = a.to_i*h.to_i*0.5
+puts "Площадь треугольника равна #{area}."
