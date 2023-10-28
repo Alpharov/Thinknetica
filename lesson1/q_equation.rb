@@ -1,11 +1,11 @@
 puts "Введите 3 коэффициента a,b,c:"
-puts "a =  "
+puts "a = "
 a = gets.chomp.to_i
 
-puts "b =  "
+puts "b = "
 b = gets.chomp.to_i
 
-puts "c =  "
+puts "c = "
 c = gets.chomp.to_i
 
 d = b**2 - 4*a*c 
