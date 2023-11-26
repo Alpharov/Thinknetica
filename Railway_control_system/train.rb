@@ -1,13 +1,11 @@
 class Train
-	attr_accessor :speed
+	attr_reader :speed
 
 	def initialize(car_number, type, number_of_wagons)
 		@car_number = car_number
 		@type = type
 		@number_of_wagons = number_of_wagons
 		@speed = 0
-		@route = nil
-		@current_station_index = 0 
 	end
 
 	def up_speed
@@ -40,11 +38,14 @@ class Train
 	def set_route(route)
     @route = route
     @current_station_index = 0
+    current_station.add_train(self)
   end
 
   def move_forward
-    if @route && @current_station_index < @route.stations.size - 1
+    if next_station
+    	current_station.departure_train(self)
       @current_station_index += 1
+      current_station.add_train(self)
       puts "Перемещение вперед. Текущая станция: #{current_station.name}"
     else
       puts "Нельзя двигаться вперед, конечная станция."
@@ -52,8 +53,10 @@ class Train
   end
 
   def move_backward
-    if @route && @current_station_index > 0
+    if previous_station
+    	current_station.departure_train(self)
       @current_station_index -= 1
+      current_station.add_train(self)
       puts "Перемещение назад. Текущая станция: #{current_station.name}"
     else
       puts "Нельзя двигаться назад, начальная станция."
@@ -61,15 +64,15 @@ class Train
   end
 
   def current_station
-    @route.stations[@current_station_index] if @route
+    @route.stations[@current_station_index]
   end
 
   def next_station
-    @route.stations[@current_station_index + 1] if @route && @current_station_index < @route.stations.size - 1
+    @route.stations[@current_station_index + 1]
   end
 
-  def prev_station
-    @route.stations[@current_station_index - 1] if @route && @current_station_index > 0
+  def previous_station
+    @route.stations[@current_station_index - 1]
   end
 
 
