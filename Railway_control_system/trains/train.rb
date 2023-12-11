@@ -1,5 +1,5 @@
 class Train
-	attr_reader :speed, :wagons
+	attr_reader :speed, :wagons, :route, :car_number
 
 	def initialize(car_number)
 		@car_number = car_number
@@ -16,7 +16,7 @@ class Train
 		@speed = 0
 	end
 
-	def attach_wagon(wagon)
+	def add_wagon(wagon)
 		if @speed.zero?
 			@wagons << wagon 
 			puts "Добавлен один вагон. Всего вагонов: #{wagons.size}" 
@@ -25,7 +25,7 @@ class Train
 		end
 	end
 
-	def detach_wagon 
+	def remove_wagon 
 		if @speed.zero? && wagons.any?
 			wagons.pop
 			puts "Вагон отцеплен. Всего вагонов: #{wagons.size} "

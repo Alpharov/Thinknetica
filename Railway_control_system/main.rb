@@ -1,7 +1,7 @@
-require_relative 'train/train'
-require_relative 'train/cargo_train'
-require_relative 'train/passenger_train'
-require_relative 'wagons/wagons'
+require_relative 'trains/train'
+require_relative 'trains/cargo_train'
+require_relative 'trains/passenger_train'
+require_relative 'wagons/wagon'
 require_relative 'wagons/cargo_wagon'
 require_relative 'wagons/passenger_wagon'
 require_relative 'route'
@@ -23,6 +23,8 @@ class Main
       break if input == '0'
     end
   end
+
+  private
 
   def show_menu
     puts "Нажмите '0' чтобы выйти"
@@ -142,8 +144,8 @@ class Main
       show_routes
       route_index = gets.chomp.to_i
 
-      if @trains[train_index].respond_to?(:assign_route)
-        @trains[train_index].assign_route(@routes[route_index])
+      if @trains[train_index].respond_to?(:set_route)
+        @trains[train_index].set_route(@routes[route_index])
         puts "Маршрут успешно назначен поезду."
       else
         puts "Этот тип поезда не поддерживает назначение маршрута."
@@ -231,45 +233,37 @@ class Main
       puts "Станция #{station.name}"
       puts "Поезда на станции #{station.name}"
       station.trains.each do |train|
-        check_trains(train)
+        train_pretty_type(train)
       end
     end
   end
 
-  private
-
-  def check_trains(train)
-  if (train.train_type == :passenger)
-    puts "#{train} - пассажирский"
-  else
-    puts "#{train} - грузовой"
+  def train_pretty_type(train)
+    if (train.type == :passenger)
+      puts "#{train} - пассажирский"
+    else
+      puts "#{train} - грузовой"
+    end
   end
-end
 
   def show_stations
-    count = 0
-    @stations.each do |station|
-      puts "#{station.name} - #{count}"
-      count += 1
+    @stations.each_with_index do |station, index|
+      puts "#{station.name} - #{index}"
     end
   end
 
   def show_trains
-    count = 0
-    @trains.each do |train|
+    @trains.each_with_index do |train, index|
       train_type = train.is_a?(PassengerTrain) ? 'Пассажирский' : 'Грузовой'
-      car_number = train.respond_to?(:car_number) ? train.car_number : 'Нет номера'
-      puts "#{train_type} поезд #{car_number} - #{count}"
-      count += 1
+      car_number = train.car_number ? train.car_number : 'Нет номера'
+      puts "#{train_type} поезд #{car_number} - #{index}"
     end
   end
 
   def show_routes
-  	count = 0
-  	@routes.each do |route|
-  		puts "#{route} - #{count}"
-  		count +=1
-  	end
+    @routes.each_with_index do |route, index|
+      puts "#{route} - #{index}"
+    end
   end
 end
 
