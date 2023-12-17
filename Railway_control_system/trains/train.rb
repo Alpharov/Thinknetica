@@ -1,10 +1,22 @@
-class Train
+class Train	
+
+	include Company_name
+	include InstanceCounter
+
+	@@trains = []
+
+	def self.find(car_number)
+		@@trains.find { |train| train.car_number == car_number }
+	end
+
+
 	attr_reader :speed, :wagons, :route, :car_number
 
 	def initialize(car_number)
 		@car_number = car_number
 		@wagons = []
 		@speed = 0
+		@@trains << self
 	end
 
 	def up_speed
