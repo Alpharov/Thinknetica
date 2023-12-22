@@ -1,7 +1,7 @@
 class Train	
 
 	include Company_name
-	include InstanceCounter
+	include Instance_Counter
 
 	@@trains = []
 
