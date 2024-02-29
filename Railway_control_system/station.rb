@@ -1,6 +1,10 @@
+require_relative 'instance_counter'
+require_relative 'validation'
+
 class Station
 
-  include Instance_Counter
+  include InstanceCounter
+  include Validation
 
   @@all_stations = []
 
@@ -26,5 +30,14 @@ class Station
 
   def departure_train(train)
     trains.delete(train)
+  end
+
+  private
+
+  def validate!
+    errors = []
+    errors << "Название станции не должно быть nil" if @name.nil?
+    errors << "Введите название станции (название не может быть пустым)" if @name.empty?
+    raise ArgumentError, errors.join(', ') unless errors.empty?
   end
 end

@@ -6,6 +6,8 @@ require_relative 'wagons/cargo_wagon'
 require_relative 'wagons/passenger_wagon'
 require_relative 'route'
 require_relative 'station'
+require_relative 'company_manufacture'
+require_relative 'validation'
 
 class Main
 

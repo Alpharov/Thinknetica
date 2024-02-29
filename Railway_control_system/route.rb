@@ -1,6 +1,9 @@
-class Route
+require_relative 'instance_counter'
+require_relative 'validation'
 
-	include Instance_Counter
+class Route
+  include InstanceCounter
+  include Validation
 	
 	attr_reader :stations
 
@@ -19,4 +22,10 @@ class Route
 	def show_stations 
 		stations.each { |station| puts station }
 	end
+
+	private
+
+  def validate!
+    raise "Необходимо создать начальную и конечную станции" if @stations.size < 2
+  end
 end
