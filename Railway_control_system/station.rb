@@ -1,10 +1,5 @@
-require_relative 'instance_counter'
-require_relative 'validation'
 
 class Station
-
-  include InstanceCounter
-  include Validation
 
   @@all_stations = []
 
@@ -31,6 +26,11 @@ class Station
   def departure_train(train)
     trains.delete(train)
   end
+
+  def each_train(&block)
+    trains.each(&block)
+  end
+  
 
   private
 

@@ -1,12 +1,6 @@
-require_relative 'company_manufacture'
-require_relative 'instance_counter'
-require_relative 'validation'
-
 class Train	
 
-	include Company_name
-	include Instance_Counter
-	include Validation
+
 
 	@@trains = []
 
@@ -90,14 +84,19 @@ class Train
   def previous_station
     @route.stations[@current_station_index - 1]
   end
+
+  def each_wagon(&block)
+  	wagons.each(&block)
+  end
+  
   private
 
   def validate!
      errors = []
-     errors << "Формат номера номера должен быть 001-AZ" if @number !~ /^\d{3}[\W.-][a-z]{2}$/i   
-     errors << "Номер поезда не может быть nil" if @type.nil?
+     errors << "Формат номера должен быть 001-AZ" if @number !~ /^\d{3}[\W.-][a-z]{2}$/i   
+     errors << "Номер поезда не может быть nil" if @number.nil?
      errors << "Колличество вагонов не может быть nil" if carriages.nil?
-     errors << "Неверный тип поезда" unless @type == :passenger or @type == :cargo
+     errors << "Неверный тип поезда" unless [:passenger, :cargo].include?(@type)
      raise ArgumentError, errors.join(', ') unless errors.empty?
   end
 

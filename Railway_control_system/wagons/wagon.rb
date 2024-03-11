@@ -1,22 +1,27 @@
-require_relative 'modules/company_manufacture'
-require_relative 'modules/validation'
 
-class Wagon
+ class Wagon
 
-  include CompanyManufacture
-  include Validation
 
-  attr_reader :type
+  attr_reader :type, :total_place, :used_place
 
-  def initialize
-    @type = nil
+  def initialize(total_place)
+    @total_place = total_place
+    @used_place = 0
+  end
+
+  def free_place
+    total_place - used_place
+  end
+
+  def take_place
+    raise 'Не реализовано!'
   end
 
   private
 
   def validate!
     errors = []
-    errors << "Вагон не может быть nil'" if @type.nil?
+    errors << "Тип вагона не может быть пустым" if @type.nil?
     errors << "Введен неправильный тип вагона" unless @type == :passenger or @type == :cargo
     raise ArgumentError, errors.join(', ') unless errors.empty?
   end

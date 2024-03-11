@@ -1,3 +1,6 @@
+require_relative 'modules/company_manufacture'
+require_relative 'modules/validation'
+require_relative 'modules/instance_counter'
 require_relative 'trains/train'
 require_relative 'trains/cargo_train'
 require_relative 'trains/passenger_train'
@@ -6,11 +9,15 @@ require_relative 'wagons/cargo_wagon'
 require_relative 'wagons/passenger_wagon'
 require_relative 'route'
 require_relative 'station'
-require_relative 'company_manufacture'
-require_relative 'validation'
+
 
 class Main
 
+  include CompanyManufacture
+  include InstanceCounter
+  include Validation
+
+  
   def initialize
     @stations = []
     @trains = []
@@ -39,6 +46,8 @@ class Main
     puts "Нажмите '7' чтобы отцепить вагон у поезда"
     puts "Нажмите '8' чтобы переместить поезд"
     puts "Нажмите '9' чтобы просмотреть станции и поезда на них"
+    puts "Нажмите '10' чтобы просмотреть вагоны у поездов"
+    puts "Нажмите '11' чтобы занять место в вагоне"
   end
 
   def choice(input)
@@ -63,6 +72,10 @@ class Main
       move_train
     when '9'
       check_stations
+    when '10'
+      check_wagons
+    when '11'
+      take_in_wagon
     end
   end
 
@@ -173,9 +186,13 @@ class Main
     end
 
     if wagon_type == 1
-      @trains[train_index].add_wagon(PassengerWagon.new)
+      puts "Укажите максимальное количество мест"
+      places = gets.chomp.to_i
+      @trains[train_index].add_wagon(PassengerWagon.new(places))
     else
-      @trains[train_index].add_wagon(CargoWagon.new)
+      puts "Введите максимальный объём"
+      volume = gets.chomp.to_i
+      @trains[train_index].add_wagon(CargoWagon.new(volume))
     end
 
     puts "Вагон успешно добавлен к поезду."
@@ -232,19 +249,18 @@ class Main
 
   def check_stations
     @stations.each do |station|
-      puts "Станция #{station.name}"
-      puts "Поезда на станции #{station.name}"
-      station.trains.each do |train|
-        train_pretty_type(train)
+      station.each_train do |train|
+       puts "Станция #{station.name}"
+       puts "Номер поезда - #{train.car_number}, тип - #{train_pretty_type(train)}, кол-во вагонов - #{train.wagons.size}"
       end
     end
   end
 
   def train_pretty_type(train)
     if (train.type == :passenger)
-      puts "#{train} - пассажирский"
+      "пассажирский"
     else
-      puts "#{train} - грузовой"
+      "грузовой"
     end
   end
 
@@ -267,6 +283,55 @@ class Main
       puts "#{route} - #{index}"
     end
   end
+
+  def check_wagons
+    number = 0
+    @trains.each do |train|
+      train.each_wagon do |wagon|
+        puts "Номер вагона - #{number}, тип - #{wagon.type}, свободно место - #{wagon.free_place}"
+        number += 1 
+      end
+    end
+  end
+
+def take_in_wagon
+    puts 'В каком поезде вы хотите занять место в вагоне?'
+    if @trains.empty?
+      puts "Нет доступных поездов."
+    else
+      puts "Выберите поезд:"
+      show_trains
+      train_index = gets.chomp.to_i
+      train = @trains[train_index]
+    end
+    
+    puts 'Какой вагон?'
+    number = 0
+    train.each_wagon do |wagon|
+      puts "#{number} - #{wagon}"
+      number += 1
+    end
+    choice = gets.chomp.to_i
+    wagon = train.wagons[choice]
+    if wagon.type == :cargo
+      puts "В данном вагоне свободно #{wagon.free_place} от общего объема в #{wagon.total_place}"
+      puts 'Сколько объема вы хотите занять?'
+      volume = gets.chomp.to_i
+      if wagon.free_place >= volume
+        wagon.take_place(volume)
+        puts "Вы успешно заняли вагон на #{volume}!"
+        puts "Загруженность вагона составляет #{wagon.used_place} из #{wagon.total_place}!"
+      else
+        puts 'Вы не можете занять больше объема чем столько, насколько расчитан вагон!'
+      end
+      puts 'Вагон уже полностью загружен!' if wagon.free_place.zero?
+    elsif wagon.type == :passenger
+      puts "В данном вагоне свободно #{wagon.free_place} мест"
+      wagon.take_place
+      puts "Вы успешно заняли место, в вагоне осталось #{wagon.free_place} свободных мест!"
+    end
+  end
+
 end
 
 Main.new.start

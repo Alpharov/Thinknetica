@@ -1,9 +1,7 @@
-require_relative 'instance_counter'
-require_relative 'validation'
+
 
 class Route
-  include InstanceCounter
-  include Validation
+ 
 	
 	attr_reader :stations
 
