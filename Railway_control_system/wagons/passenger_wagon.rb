@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PassengerWagon < Wagon
   def initialize(seats_total)
     @type = :passenger

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Train
   include CompanyManufacture
   include InstanceCounter

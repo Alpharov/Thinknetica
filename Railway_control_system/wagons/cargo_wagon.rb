@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CargoWagon < Wagon
   def initialize(volume_total)
     @type = :cargo
