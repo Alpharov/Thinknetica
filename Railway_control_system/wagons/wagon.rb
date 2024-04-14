@@ -1,6 +1,6 @@
-
- class Wagon
-
+class Wagon
+  include CompanyManufacture
+  include Validation
 
   attr_reader :type, :total_place, :used_place
 
@@ -21,8 +21,8 @@
 
   def validate!
     errors = []
-    errors << "Тип вагона не может быть пустым" if @type.nil?
-    errors << "Введен неправильный тип вагона" unless @type == :passenger or @type == :cargo
+    errors << 'Тип вагона не может быть пустым' if @type.nil?
+    errors << 'Введен неправильный тип вагона' unless (@type == :passenger) || (@type == :cargo)
     raise ArgumentError, errors.join(', ') unless errors.empty?
   end
 end

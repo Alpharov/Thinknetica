@@ -1,5 +1,4 @@
 class CargoWagon < Wagon
-
   def initialize(volume_total)
     @type = :cargo
     super

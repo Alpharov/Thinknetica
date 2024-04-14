@@ -1,5 +1,6 @@
-
 class Station
+  include InstanceCounter
+  include Validation
 
   @@all_stations = []
 
@@ -8,7 +9,7 @@ class Station
   end
 
   attr_reader :trains, :name
-  
+
   def initialize(name)
     @name = name
     @trains = []
@@ -30,14 +31,13 @@ class Station
   def each_train(&block)
     trains.each(&block)
   end
-  
 
   private
 
   def validate!
     errors = []
-    errors << "Название станции не должно быть nil" if @name.nil?
-    errors << "Введите название станции (название не может быть пустым)" if @name.empty?
+    errors << 'Название станции не должно быть nil' if @name.nil?
+    errors << 'Введите название станции (название не может быть пустым)' if @name.empty?
     raise ArgumentError, errors.join(', ') unless errors.empty?
   end
 end

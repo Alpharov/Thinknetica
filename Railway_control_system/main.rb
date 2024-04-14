@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'modules/company_manufacture'
 require_relative 'modules/validation'
 require_relative 'modules/instance_counter'
@@ -10,14 +12,7 @@ require_relative 'wagons/passenger_wagon'
 require_relative 'route'
 require_relative 'station'
 
-
 class Main
-
-  include CompanyManufacture
-  include InstanceCounter
-  include Validation
-
-  
   def initialize
     @stations = []
     @trains = []
@@ -53,7 +48,7 @@ class Main
   def choice(input)
     case input
     when '0'
-      puts "До свидания!"
+      puts 'До свидания!'
     when '1'
       create_station
     when '2'
@@ -80,160 +75,160 @@ class Main
   end
 
   def create_station
-    puts "Введите название станции: "
+    puts 'Введите название станции: '
     name = gets.chomp
     @stations << Station.new(name)
   end
 
   def create_train
-    puts "Нажмите 1 чтобы создать грузовой поезд, 2 чтобы пассажирский: "
+    puts 'Нажмите 1 чтобы создать грузовой поезд, 2 чтобы пассажирский: '
     type = gets.chomp
-    puts "Ввведите номер поезда: "
+    puts 'Ввведите номер поезда: '
     number = gets.chomp
-    if (type == '1')
+    if type == '1'
       @trains << CargoTrain.new(number)
-    elsif (type == '2')
+    elsif type == '2'
       @trains << PassengerTrain.new(number)
     else
-      puts "К сожалению, поезд не удалось создать."
+      puts 'К сожалению, поезд не удалось создать.'
     end
   end
 
   def create_route
-    if (@stations.size < 2)
-      puts "Невозможно создать маршрут"
+    if @stations.size < 2
+      puts 'Невозможно создать маршрут'
     else
-      puts "Выберите начальную станцию: "
+      puts 'Выберите начальную станцию: '
       show_stations
       start_station = gets.chomp.to_i
 
-      puts "Веберите конечную станцию: "
+      puts 'Веберите конечную станцию: '
       show_stations
       end_station = gets.chomp.to_i
 
-      @routes << Route.new(@stations[start_station], @stations[end_station] )
-      puts "Маршрут успешно создан!"
+      @routes << Route.new(@stations[start_station], @stations[end_station])
+      puts 'Маршрут успешно создан!'
     end
   end
 
-
   def station_actions
-  	if @routes.empty?
-  		puts "Маршрутов нет."
-  	else
-  		puts "В какой маршрут вы хотите внести изменения?"
-  		show_routes
-  		route = gets.chomp.to_i
-  		puts "Добавить(1) или удалить(2) станцию:"
-  		choice = gets.chomp.to_i
-  		show_stations
-  		if (choice == 1)
-  			puts "Какую станцию добавить?"
-  			show_stations
-  			choice_station = gets.chomp.to_i
-  			@routes[route].add_station( @stations[choice_station] )
-  		elsif (choice == 2)
-  			count = 0
-  			puts "Какую станцию удалить?"
-  			@routes[route].stations.each do |station|
-  				puts "#{station.name} - #{count}"
-  				count += 1
-  			end
-  			delete_station = gets.chomp.to_i
-  			@routes[route].delete_station(@stations[delete_station])
-  		else
-  			"Данные неверны."
-  		end
-  	end
+    if @routes.empty?
+      puts 'Маршрутов нет.'
+    else
+      puts 'В какой маршрут вы хотите внести изменения?'
+      show_routes
+      route = gets.chomp.to_i
+      puts 'Добавить(1) или удалить(2) станцию:'
+      choice = gets.chomp.to_i
+      show_stations
+      if choice == 1
+        puts 'Какую станцию добавить?'
+        show_stations
+        choice_station = gets.chomp.to_i
+        @routes[route].add_station(@stations[choice_station])
+      elsif choice == 2
+        count = 0
+        puts 'Какую станцию удалить?'
+        @routes[route].stations.each do |station|
+          puts "#{station.name} - #{count}"
+          count += 1
+        end
+        delete_station = gets.chomp.to_i
+        @routes[route].delete_station(@stations[delete_station])
+      else
+        'Данные неверны.'
+      end
+    end
   end
 
   def add_route_to_train
     if @trains.empty? || @routes.empty?
-      puts "Нет доступных поездов или маршрутов"
+      puts 'Нет доступных поездов или маршрутов'
     else
-      puts "Выберите поезд:"
+      puts 'Выберите поезд:'
       show_trains
       train_index = gets.chomp.to_i
 
-      puts "Выберите маршрут:"
+      puts 'Выберите маршрут:'
       show_routes
       route_index = gets.chomp.to_i
 
       if @trains[train_index].respond_to?(:set_route)
         @trains[train_index].set_route(@routes[route_index])
-        puts "Маршрут успешно назначен поезду."
+        puts 'Маршрут успешно назначен поезду.'
       else
-        puts "Этот тип поезда не поддерживает назначение маршрута."
+        puts 'Этот тип поезда не поддерживает назначение маршрута.'
       end
     end
   end
 
   def add_wagon_to_train
-  	if @trains.empty?
-    	puts "Нет доступных поездов."
-  	else
-    	puts "Выберите поезд:"
-    	show_trains
-    	train_index = gets.chomp.to_i
+    if @trains.empty?
+      puts 'Нет доступных поездов.'
+    else
+      puts 'Выберите поезд:'
+      show_trains
+      train_index = gets.chomp.to_i
     end
 
-    	wagon_type = nil
+    wagon_type = nil
     loop do
-      puts "Выберите тип вагона (1 - Пассажирский, 2 - Грузовой):"
+      puts 'Выберите тип вагона (1 - Пассажирский, 2 - Грузовой):'
       wagon_type = gets.chomp.to_i
       break if [1, 2].include?(wagon_type)
-      puts "Некорректный ввод."
+
+      puts 'Некорректный ввод.'
     end
 
     if wagon_type == 1
-      puts "Укажите максимальное количество мест"
+      puts 'Укажите максимальное количество мест'
       places = gets.chomp.to_i
       @trains[train_index].add_wagon(PassengerWagon.new(places))
     else
-      puts "Введите максимальный объём"
+      puts 'Введите максимальный объём'
       volume = gets.chomp.to_i
       @trains[train_index].add_wagon(CargoWagon.new(volume))
     end
 
-    puts "Вагон успешно добавлен к поезду."
+    puts 'Вагон успешно добавлен к поезду.'
   end
 
-
   def remove_wagon_from_train
-  	if @trains.empty?
-  		puts "Нет доступных поездов."
-  	else
-  		puts "Выберите поезд:"
-  		show_trains
-  		train_index = gets.chomp.to_i
+    if @trains.empty?
+      puts 'Нет доступных поездов.'
+    else
+      puts 'Выберите поезд:'
+      show_trains
+      train_index = gets.chomp.to_i
 
-  		if @trains[train_index].wagons.empty?
-  			puts "У поезда нет вагонов для отсоединения."
-  		else
-  			@trains[train_index].remove_wagon
-  			puts "Вагон успешно отсоединен от поезда."
-  		end
-  	end
+      if @trains[train_index].wagons.empty?
+        puts 'У поезда нет вагонов для отсоединения.'
+      else
+        @trains[train_index].remove_wagon
+        puts 'Вагон успешно отсоединен от поезда.'
+      end
+    end
   end
 
   def move_train
-  	if @trains.empty?
-    	puts "Нет доступных поездов."
-  	else
-    	puts "Выберите поезд:"
-    	show_trains
-    	train_index = gets.chomp.to_i
+    if @trains.empty?
+      puts 'Нет доступных поездов.'
+    else
+      puts 'Выберите поезд:'
+      show_trains
+      train_index = gets.chomp.to_i
     end
 
     if @trains[train_index].route.nil?
-      puts "У поезда нет маршрута."
+      puts 'У поезда нет маршрута.'
     else
       direction = nil
       loop do
-        puts "Выберите направление движения (1 - Вперед, 2 - Назад):"
+        puts 'Выберите направление движения (1 - Вперед, 2 - Назад):'
         direction = gets.chomp.to_i
         break if [1, 2].include?(direction)
-        puts "Некорректный ввод. Попробуйте снова."
+
+        puts 'Некорректный ввод. Попробуйте снова.'
       end
 
       if direction == 1
@@ -242,25 +237,24 @@ class Main
         @trains[train_index].move_backward
       end
 
-      puts "Поезд перемещен по маршруту."
+      puts 'Поезд перемещен по маршруту.'
     end
   end
-
 
   def check_stations
     @stations.each do |station|
       station.each_train do |train|
-       puts "Станция #{station.name}"
-       puts "Номер поезда - #{train.car_number}, тип - #{train_pretty_type(train)}, кол-во вагонов - #{train.wagons.size}"
+        puts "Станция #{station.name}"
+        puts "Номер поезда - #{train.car_number}, тип - #{train_pretty_type(train)}, кол-во вагонов - #{train.wagons.size}"
       end
     end
   end
 
   def train_pretty_type(train)
-    if (train.type == :passenger)
-      "пассажирский"
+    if train.type == :passenger
+      'пассажирский'
     else
-      "грузовой"
+      'грузовой'
     end
   end
 
@@ -273,7 +267,7 @@ class Main
   def show_trains
     @trains.each_with_index do |train, index|
       train_type = train.is_a?(PassengerTrain) ? 'Пассажирский' : 'Грузовой'
-      car_number = train.car_number ? train.car_number : 'Нет номера'
+      car_number = train.car_number || 'Нет номера'
       puts "#{train_type} поезд #{car_number} - #{index}"
     end
   end
@@ -289,22 +283,22 @@ class Main
     @trains.each do |train|
       train.each_wagon do |wagon|
         puts "Номер вагона - #{number}, тип - #{wagon.type}, свободно место - #{wagon.free_place}"
-        number += 1 
+        number += 1
       end
     end
   end
 
-def take_in_wagon
+  def take_in_wagon
     puts 'В каком поезде вы хотите занять место в вагоне?'
     if @trains.empty?
-      puts "Нет доступных поездов."
+      puts 'Нет доступных поездов.'
     else
-      puts "Выберите поезд:"
+      puts 'Выберите поезд:'
       show_trains
       train_index = gets.chomp.to_i
       train = @trains[train_index]
     end
-    
+
     puts 'Какой вагон?'
     number = 0
     train.each_wagon do |wagon|
@@ -331,7 +325,6 @@ def take_in_wagon
       puts "Вы успешно заняли место, в вагоне осталось #{wagon.free_place} свободных мест!"
     end
   end
-
 end
 
 Main.new.start

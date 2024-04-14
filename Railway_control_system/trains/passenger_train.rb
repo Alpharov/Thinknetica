@@ -1,8 +1,8 @@
-class PassengerTrain < Train 
+class PassengerTrain < Train
   attr_reader :type
 
-	def initialize(car_number)
-		super
-		@type =	:passenger
-	end
+  def initialize(car_number)
+    super
+    @type =	:passenger
+  end
 end
